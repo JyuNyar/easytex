@@ -1,0 +1,699 @@
+\documentclass[11pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage{mathpazo}
+\usepackage{graphicx}
+\usepackage[skip=8pt]{caption}
+\usepackage{adjustbox}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{longtable} 
+\usepackage{booktabs}  
+\usepackage{fancyhdr}
+\usepackage{booktabs}
+\usepackage{framed}
+\usepackage{tabu}
+\usepackage{longtable}
+\usepackage{graphicx}
+\usepackage{lscape}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{rotating}
+\usepackage[section]{placeins}
+\usepackage{dcolumn}
+\usepackage{subfig}
+\tabulinesep=1.5mm
+\usepackage[table]{xcolor}
+\usepackage{pdfpages}
+\usepackage{multicol}
+\usepackage[ampersand]{easylist}
+\usepackage[paper=portrait,pagesize]{typearea}
+
+% Slightly bigger margins than the latex defaults
+\geometry{verbose, tmargin=1in, bmargin=1in, lmargin=1in, rmargin=1in}
+
+% No paragraph indent
+%\setlength\parindent{0pt}
+
+\usepackage{fontspec} %Select document-wide font
+%__\setmainfont{__font__}
+ 
+\renewcommand{\footrulewidth}{0.4pt}% default is 0pt i.e. invisible
+ 
+\graphicspath{ {images/} }
+
+
+\title{easytex}
+\author{}
+\date{\today}
+
+
+\begin{document}
+
+\maketitle
+
+\clearpage
+\addtocontents{toc}{\protect\hypertarget{toc}{}}\tableofcontents
+\addtocontents{lof}{\protect\hypertarget{lof}{}}\listoffigures
+\addtocontents{lot}{\protect\hypertarget{lot}{}}\listoftables
+\pagestyle{fancy}
+
+\fancyhead[L]{easytex}
+\fancyhead[R]{\today}
+\fancyfoot[L]{ReadMe}
+\fancyfoot[R]{Built using easytex}
+
+\thispagestyle{fancy}
+
+
+\clearpage
+
+\clearpage
+
+
+\section[Introduction]{\hyperlink{toc}{Introduction}}
+
+
+The nypd\_reports library is intended to serve as easy{-}to{-}use python{-}to{-}latex API interface.
+Rather then having to know exactly what latex commands to use, the intention is for nypd\_reports to do the heavy lifting for you.
+The nypd\_reports library is currently organzied into 8 classes:tex
+\Activate
+\begin{easylist}[enumerate]
+\ListProperties(Hang=true, Progressive=4ex)
+& Preamble
+& Document
+& Text
+& Table
+& Figure
+& Section
+& Environment
+& PageStyle
+\end{easylist}
+\Deactivate
+
+
+
+Each of these classes, and their uses are documented in the following sections.
+
+The nypd\_reports library can be loaded simply by running:
+
+\begin{verbatim}
+from nypd_reports import *
+\end{verbatim}
+
+\clearpage
+
+
+\section[Preamble]{\hyperlink{toc}{Preamble}}
+
+
+The preamble section contains all the necessary setup information for latex to render a document.
+The Document class (covered later) requires a Preamble object upon declaration, which means making a preamble should be the first step when creating a new document.
+By default, the Preamble() class loads a default preamble.
+The only values a user is required to pass pertain to document meta{-}inforamation including: 1) Title, 2) Author, 3) Date, and 4) font.
+Note that the font passed is document{-}wide.
+
+The Preamble class accepts the following arguments:
+\Activate
+\begin{easylist}[enumerate]
+\ListProperties(Hang=true, Progressive=4ex)
+& tex: str
+&& Can pass a custom preamble here.
+& font: str
+&& Name of font to use with the document.
+& title: str
+&& Title of the report.
+& author: str
+&& Author(s) of the report.
+& date: str
+&& String representing the date to appear on the document.
+\end{easylist}
+\Deactivate
+
+
+
+\subsection[Example Usage]{\hyperlink{toc}{Example Usage}}
+
+
+\begin{verbatim}
+
+preamble = Preamble(author='', date='\today', title='easytex', font='Lato')
+
+\end{verbatim}
+
+\clearpage
+
+
+\section[Document]{\hyperlink{toc}{Document}}
+
+
+The Document class represents the full latex document.
+A Document object requires a preamble object upon initialization.
+By default, a new latex document always includes the provided title, a table of contents, a list of figures and a list tables.
+These can all be disabled when creating a new Document object.
+
+The document class, like all provided classes as part of the nypd\_reports library, includes a .add() function.
+This function represents the intended way to combine the different report parts (such as text, tables and figures) together into a cohesive document.
+A typical workflow follows the pattern: 1) Create Preamble, 2) Create Document (using Preamble), 3) Create Content, 4) Add content to Document, 5) Repeat 3 \& 4 untill finished.
+
+The Document class accepts the following arguments:
+\Activate
+\begin{easylist}[enumerate]
+\ListProperties(Hang=true, Progressive=4ex)
+& preamble: Preamble
+&& A Preamble object.
+& include\_title: bool
+&& Name of font to use with the document.
+& table\_of\_contents: bool
+&& True: Include a table of contents.
+&& False: Do not include a table of contents.
+& list\_of\_figures: bool
+&& True: Include a list of figures.
+&& False: Do not include a list of figures.
+& list\_of\_tables: bools
+&& True: Include a list of tables.
+&& False: Do not include a list of tables.
+\end{easylist}
+\Deactivate
+
+
+
+\subsection[Important Methods]{\hyperlink{toc}{Important Methods}}
+
+
+Some important methods belonging to the Document class include:
+\Activate
+\begin{easylist}[enumerate]
+\ListProperties(Hang=true, Progressive=4ex)
+& add\_clearpage(self)
+&& Adds a clearpage command at the current document location.
+& export\_tex(self, file)
+&& Exports the documents tex commands to file.
+& render\_report(self, destination)
+&& Calls export\_tex and then compiles the tex file using xelatex.
+& print\_map(self)
+&& Prints an outline view of the current document.
+\end{easylist}
+\Deactivate
+
+
+
+\subsection[Example Usage]{\hyperlink{toc}{Example Usage}}
+
+
+\begin{verbatim}
+Example creating a document, adding a section, exporting the tex, and then rendering the pdf:
+\end{verbatim}
+
+\begin{verbatim}
+
+# Create a new document:
+document = Document(
+    preamble=preamble,
+    include_title=True, 
+    table_of_contents=True, 
+    list_of_figures=True, 
+    list_of_tables=True
+)
+
+# Add a Section object named 'section':
+document.add(section)
+
+# Render the document:
+document.render_report('rendered_report_name.pdf')
+
+# Note: The rendered report will be saved under 'rendered_report_name.pdf'
+
+\end{verbatim}
+
+\clearpage
+
+
+\section[Text]{\hyperlink{toc}{Text}}
+
+
+This class represents a latex text.
+
+The Text class accepts the following arguments:
+\Activate
+\begin{easylist}[enumerate]
+\ListProperties(Hang=true, Progressive=4ex)
+& text: str / dict
+&& Passed text will be treated as plain text for a latex document, or as a list of a dictionry is passed.
+&& When passing a dictionary, the keys should be the list text, and the values correspond to the list level.
+&& Example: dict('here is a list entry': 1)
+& verbatim: bool
+&& If true, inserts text verbatim (as{-}is).
+&& Useful for codeblocks.
+\end{easylist}
+\Deactivate
+
+
+
+\subsection[Important Methods]{\hyperlink{toc}{Important Methods}}
+
+
+Some important methods belonging to the Text class include:
+\Activate
+\begin{easylist}[enumerate]
+\ListProperties(Hang=true, Progressive=4ex)
+& add\_list(self, list\_items, bullets=False)
+&& Creates a list from list\_items.
+&& If bullets=False, then bullets will be numeric.
+& add\_bold(self, text)
+&& Inserts bolded text.
+\end{easylist}
+\Deactivate
+
+
+
+\subsection[Example Usage]{\hyperlink{toc}{Example Usage}}
+
+Creating a list:
+\begin{verbatim}
+
+# Create list dictionary
+# The numeric corresponds to the list level; '1' is the top level
+# '2' is a sub bullet, and so on.
+
+dict_ = {
+    'add_list(self, list_items, bullets=False)': 1,
+    'Creates a list from list_items.': 2,
+    'If bullets=False, then bullets will be numeric.': 2,
+    'add_verbatim(self, text)': 1,
+    'Inserts text verbatim or as-is.': 2,
+    'Useful for codeblocks.': 2,
+    'add_bold(self, text)': 1,
+    'Inserts bolded text.': 2
+}
+
+# Create a latex list using the Text() class from the above dict:
+list_ = Text(dict_)
+
+\end{verbatim}
+
+\clearpage
+
+
+\section[Table]{\hyperlink{toc}{Table}}
+
+
+This class represents a latex table.
+A Table object can be initialized in a number of ways, but by far the easiest is to pass a pandas DataFrame.
+While pandas includes a \textasciitilde{}.to\_latex() function, this can be severly limiting if one wants to change anything having to do with a particular table's style.
+The Table class provides a number of style arguments, including: row{-}lines, row highlighting, longtables and landscape tables, and zebra stripping.
+
+The Table class is configured to create a minimalist table by default.
+
+The Table class accepts the following arguments:
+\Activate
+\begin{easylist}[enumerate]
+\ListProperties(Hang=true, Progressive=4ex)
+& table\_type: str
+&& Must be `table', `tabular', `longtable', or `sidewaystable'
+&& Designates the type of tabular environment used.
+& label: str
+&& A string represnting the table's cross reference label
+& data: pd.DataFrame or list
+&& A pandas dataframe or list object to convert into a latex table.
+& cols: list
+&& List of column names. Used to generate an appropriately sized table.
+& caption: str
+&& A string representing the table's caption.
+& captionof: str
+&& A string representing the table's caption. To be used outside of a float environment.
+& empty\_label: bool
+&& A flag representing whether to use a blank caption.
+& alignment: str
+&& A string representing a latex tabular alignment command.
+&& Used to overwrite default alignment.
+& zebra: bool
+&& Boolean representing whether the table should be zebra stripped or not.
+& row\_colors: dict
+& Dictionary mapping row indexes to row color names.mid\_rule: bool
+&& Boolean representing whether the table should have midrules between rows.
+& mid\_rule\_color: str
+&& The color name the table's midrule lines should be.
+& link\_target: str
+&& A string representing an href anchor label the figure should link to.
+\end{easylist}
+\Deactivate
+
+
+
+\subsection[Important Methods]{\hyperlink{toc}{Important Methods}}
+
+
+The Table class was designed to be fully initialized without the neeed of calling additional methods.
+
+To that end, a Table object can be fully constructed by providing only three pieces of information: 1) a pandas dataframe, 2) a cross reference label, and 3) the type of table to create.
+
+Certain use{-}cases may necessitate creating an ad{-}hoc table (such as for aligning document elements in non{-}standard ways) that would benefit fromt he use of the underlying method calls within the Table class.
+This type of functionality is still being developed.
+
+A notable external function, however, is make\_row\_colors\_dict():
+\Activate
+\begin{easylist}[enumerate]
+\ListProperties(Hang=true, Progressive=4ex)
+& make\_row\_colors\_dict(df, in\_values, column=None, color=None)
+&& df: pd.dataframe
+&&& The pandas dataframe to be colored
+&& column: str
+&&& The column name to be used for conditional highlighting
+&& in\_values: list or pd.Series
+&&& The list of values to search column for, OR a boolean pandas series.
+&& color: str
+&&& A latex interpretable color string (a colorname or colorname!value)
+\end{easylist}
+\Deactivate
+
+
+
+\subsection[Example Usage]{\hyperlink{toc}{Example Usage}}
+
+Creating a table:
+\begin{verbatim}
+
+# Create an example dataframe:
+t = pd.DataFrame({'a': [1,2,3], 'b': [4,5,6]})
+
+# Create a color dict to highlight col 'b' values greater than 5:
+color_filter = t['b'] > 5
+row_colors = make_row_colors_dict(df=t, in_values=color_filter, color='red!25')
+
+# Create the final table
+
+table = Table(
+    data=t,
+    row_colors=row_colors,
+    table_type='table',
+    label='colored_table',
+    caption='Result',
+    link_target='lot'
+)
+
+# Multi-Index Table Example:
+arrays = [
+    ['Colors', 'Colors', 'Colors', 'Fruit', 'Fruit', 'Fruit', '&Meat', '&Meat'],
+    ['red', 'red', 'blue', 'apple', 'apple', 'grape', 'chicken', 'chicken'],
+    ['Y', 'N', 'Y', 'Y', 'N', 'Y', 'Y', 'N']
+]
+
+tuples = list(zip(*arrays))
+
+tuples = list(zip(*arrays))
+index = pd.MultiIndex.from_tuples(tuples, names=['Category', 'Item', 'Flag'])
+
+data = pd.DataFrame({'A': np.random.randn(8), 'B': np.random.randn(8), 'C': np.random.randn(8)}, index=index)
+
+d = data.T
+d.index.name = 'rows'
+
+x = pd.DataFrame(columns=d.columns, index=data.index)
+
+
+\end{verbatim}
+\begin{table}[!h]
+\centering
+\caption[Result]{\hyperlink{lot}{Result}}
+\label{colored_table}
+\begin{tabular}{lrr}
+\toprule
+\textbf{} & \textbf{a} & \textbf{b} \\
+\midrule
+\arrayrulecolor{black}\textbf{0} & 1 & 4 \\
+\textbf{1} & 2 & 5 \\
+\rowcolor{red!25}
+\textbf{2} & 3 & 6 \\
+\bottomrule
+\end{tabular}
+\end{table}
+\rowcolors{1}{white}{white}
+
+\clearpage
+
+
+\section[Figure]{\hyperlink{toc}{Figure}}
+
+
+This class represents a latex Figure.
+
+A Figure object an be initialized in one of two ways: 1) A matplotlib.Figure can be passed, or 2) a filepath pointing to a figure may be passed.
+Figures are placed into non{-}floating mini{-}pages by default.
+This means that figures will always appear in{-}line in the order they were added to the document.
+
+If a matplotlib.Figure is used to create a LatexPart.Figure object, then a copy of the figure will be automatically exported and saved to a local pdf.
+This is necessary for the latex compiler to be able to add the image when the document is ultimately rendered.
+
+The Figure class accepts the following arguments:
+\Activate
+\begin{easylist}[enumerate]
+\ListProperties(Hang=true, Progressive=4ex)
+&  label: str
+&& A string the figures label {-} used to cross{-}reference.
+& figure: obj
+&& An object representing the figure being added
+& max\_height: float
+&& A float representing the proportion of max text height the figure can be.
+& max\_width: float
+&& A float representing the proportion of max text width the figure can be.
+& graphics\_path: str
+&& A string representing the path to a saved figure (if needed).
+&& Does not include the filename.
+& caption: str
+&& String representing the caption to be used with the Figure.
+& empty\_label: bool
+&& A flag used to track whether caption should be empty or not.
+& link\_target: str
+&& A string representing an internal href anchor label.
+&& Used to link back to table of contents, lists of figures and lists of tables.
+\end{easylist}
+\Deactivate
+
+
+
+\subsection[Example Usage]{\hyperlink{toc}{Example Usage}}
+
+Creating a figure:
+\begin{verbatim}
+
+# Create Example Figure:
+import matplotlib.cm as cm
+import matplotlib.pyplot as plt
+
+delta = 0.025
+x = y = np.arange(-3.0, 3.0, delta)
+X, Y = np.meshgrid(x, y)
+Z1 = np.exp(-X**2 - Y**2)
+Z2 = np.exp(-(X - 1)**2 - (Y - 1)**2)
+Z = (Z1 - Z2) * 2
+
+fig, ax = plt.subplots()
+im = ax.imshow(Z, interpolation='bilinear', cmap=cm.RdYlGn,
+               origin='lower', extent=[-3, 3, -3, 3],
+               vmax=abs(Z).max(), vmin=-abs(Z).max())
+
+# Create the final Figure
+figure = Figure(
+    figure=fig,
+    label='figure_label',
+    caption='Here is a caption',
+    link_target='lof'
+)
+
+\end{verbatim}
+\begin{minipage}{1.0\linewidth}
+\centering
+\captionof{figure}[Here is a caption]{\hyperlink{lof}{Here is a caption}}\adjustimage{max size={\linewidth}{1.0\textheight}}{figure_label}
+\label{figure_label}
+\end{minipage}
+\clearpage
+
+
+\section[Section]{\hyperlink{toc}{Section}}
+
+
+This class represents a latex Section.
+
+Sections are a common way to organize information within a document.
+
+Currently, the Section class supports Sections, sub{-}sections, and sub{-}sub{-}sections.
+
+The Section class accepts the following arguments:
+\Activate
+\begin{easylist}[enumerate]
+\ListProperties(Hang=true, Progressive=4ex)
+& child: LatexPart
+&& A latexPart to be contained within the section.
+& link\_target: str
+&& A string signifying a cross{-}reference label to link the section to.
+&& Default labels include:
+&&& toc (table of contents)
+&&& lof (list of figures)
+&&& lot (list of tables)
+\end{easylist}
+\Deactivate
+
+
+
+\subsection[Example Usage]{\hyperlink{toc}{Example Usage}}
+
+
+\begin{verbatim}
+# Create a Section
+section = Section(
+    'This is the section name',
+    level=1,
+    link_target='toc'
+)
+
+# Add some content to the section:
+section.add(Text('Here is some text that goes into the section.'))
+
+\end{verbatim}
+
+\clearpage
+
+
+\section[Environment]{\hyperlink{toc}{Environment}}
+
+
+This class represents a latex environment.
+
+Environments are used to change the layout of parts of a latex document.
+For example, centering elements such as text, figures and tables can be done using environments.
+
+Environments are treated as 'containers' {-} that is that they contain or encapsulate other report objects.
+To encapsulate a latex element {-} for example a table {-} in an environment, simply pass the latex element as the solo argument to an Environment.
+Once an environment has been declared, additional method calls are used to 'add' the desired enviornments.
+
+Currently, the Environment class supports minipages, landscapes, adjustboxes and centering environments.
+
+The syntax flow is as follows:
+Create latex element {-}> add element to environment {-}> add specific environment behavior.
+
+The Environment class accepts the following arguments:
+\Activate
+\begin{easylist}[enumerate]
+\ListProperties(Hang=true, Progressive=4ex)
+& child: LatexPart
+&& A latexPart to be contained within the Environment.
+\end{easylist}
+\Deactivate
+
+
+
+\subsection[Example Usage]{\hyperlink{toc}{Example Usage}}
+
+
+\begin{verbatim}
+
+# Example table:
+
+text = Text(
+    'repeat this text' * 5
+)
+
+# Declare an environment encapsulating the table from above:
+environment = Environment(text)
+
+# Add a centering environment:
+environment.add_centering()
+
+
+\end{verbatim}
+
+\begin{center}
+repeat this textrepeat this textrepeat this textrepeat this textrepeat this text
+\end{center}
+
+\clearpage
+
+
+\section[Columns]{\hyperlink{toc}{Columns}}
+
+
+This class is used to create newspaper{-}like column layouts.
+This class serves as a convenient way to ensure document elements appear next to eachother.
+
+The column class accepts a single argument:
+\Activate
+\begin{easylist}[enumerate]
+\ListProperties(Hang=true, Progressive=4ex)
+& arg: int / list
+&& An int specifying the number of columns, or a list containing each columns' contents.
+\end{easylist}
+\Deactivate
+
+
+
+\subsection[Example Usage]{\hyperlink{toc}{Example Usage}}
+
+
+\begin{verbatim}
+
+# Example:
+
+# Make  Table
+table = Table(
+    data=pd.DataFrame({'A':[1,2,3], 'B':[3,4,5]}),
+    table_type='tabular',
+    label='example'
+)
+
+center_table = Environment(table)
+center_table.add_centering()
+
+# Create a Column object and fill column contents:
+columns = Columns(3)
+columns[0] = Figure(figure=fig, label='figure', max_width=1.0)
+columns[1] = center_table
+columns[2] = Text('some random text ' * 20)
+
+or
+
+columns = Columns([
+    Figure(figure=fig, label='figure', max_width=1.0),
+    center_table,
+    Text('some random text ' * 20)
+])
+
+\end{verbatim}
+
+\clearpage
+
+\begin{multicols}{3}
+\begin{minipage}{1.0\linewidth}
+\centering
+\adjustimage{max size={\linewidth}{1.0\textheight}}{figure}
+\label{figure}
+\end{minipage}
+
+\columnbreak
+
+
+\begin{center}
+
+\captionof{table}{None}
+\label{example}
+\begin{tabular}{lrr}
+\toprule
+\textbf{} & \textbf{A} & \textbf{B} \\
+\midrule
+\arrayrulecolor{black}\textbf{0} & 1 & 3 \\
+\textbf{1} & 2 & 4 \\
+\textbf{2} & 3 & 5 \\
+\bottomrule
+\end{tabular}
+\rowcolors{1}{white}{white}
+
+\end{center}
+
+
+\columnbreak
+
+some random text some random text some random text some random text some random text some random text some random text some random text some random text some random text some random text some random text some random text some random text some random text some random text some random text some random text some random text some random text 
+\end{multicols}
+
+\end{document}
